@@ -1,27 +1,35 @@
 import subprocess
 
 class Player:
-    def start(self):
-        self._process = subprocess.Popen([
+    _process = None
+    @classmethod
+    def start(cls):
+        if cls._process:
+            cls._process.stop()
+        cls._process = subprocess.Popen([
             'mplayer', 
-            'http://localhost:8000' 
-            ])
+            'http://localhost:8000' ], 
+            stdin=subprocess.PIPE, 
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.PIPE)
 
-    def stop(self):
-        if self._process:
-            self._process.terminate()
-            self._process.wait()
+    @classmethod
+    def stop(cls):
+        if cls._process:
+            cls._process.terminate()
+            cls._process.wait()
 
-_player  = None
-
-def start():
-    global _player
-    if not _player:
-        _player = Player()
-        _player.start()
-
-
-def stop():
-    global _player
-    if _player:
-        _player.stop()
+    @classmethod
+    def pause(cls):
+        if cls._process:
+            cls._process.stdin.write(' ')
+            
+    @classmethod
+    def volup(cls):
+        if cls._process:
+            cls._process.stdin.write('*')
+            
+    @classmethod
+    def voldown(cls):
+        if cls._process:
+            cls._process.stdin.write('/')

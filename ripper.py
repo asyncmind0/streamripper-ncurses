@@ -1,30 +1,25 @@
+import os
 import subprocess
 
 class Ripper:
-    def __init__(self,url):
-        self._url = url
+    _process = None
 
-    def start(self):
-        self._process = subprocess.Popen([
+    @classmethod
+    def start(cls,url, directory='ripped'):
+        if not os.path.isdir(directory):
+            os.mkdir(directory)
+        cls._process = subprocess.Popen([
             'streamripper', 
-            self._url, 
-            '-r'
-            ])
+            url, 
+            '-r',
+            '-d', 'ripped'],
+            stdin=subprocess.PIPE, 
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.PIPE)
 
-    def stop(self):
-        if self._process:
-            self._process.terminate()
-            self._process.wait()
+    @classmethod
+    def stop(cls):
+        if cls._process:
+            cls._process.terminate()
+            cls._process.wait()
 
-_ripper = None
-
-def start(url):
-    global _ripper
-    if not _ripper:
-        _ripper = Ripper(url)
-        _ripper.start()
-
-def stop():
-    global _ripper
-    if _ripper:
-        _ripper.stop()
