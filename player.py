@@ -5,7 +5,7 @@ class Player:
     @classmethod
     def start(cls):
         if cls._process:
-            cls._process.stop()
+            cls.stop()
         cls._process = subprocess.Popen([
             'mplayer', 
             'http://localhost:8000' ], 
