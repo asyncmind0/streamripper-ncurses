@@ -1,0 +1,5 @@
+Im trying make a ncurses interface for streamripper
+Experiment with urwid 
+Load an m3u playlist 
+Rip selected streams
+optionally relay to mplayer
